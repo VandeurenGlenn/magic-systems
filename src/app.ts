@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain } from 'electron'
+import { app, BrowserWindow, dialog, ipcMain } from 'electron'
 import { join, dirname } from 'path'
 import { fileURLToPath } from 'url'
 
@@ -16,6 +16,16 @@ function createWindow() {
     }
   })
 
+  ipcMain.handle('dialog:openDirectory', async () => {
+    const { canceled, filePaths } = await dialog.showOpenDialog(win, {
+      properties: ['openDirectory']
+    })
+    if (canceled) {
+      return
+    } else {
+      return filePaths[0]
+    }
+  })
   win.loadFile('www/index.html')
 }
 

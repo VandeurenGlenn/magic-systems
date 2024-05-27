@@ -1,7 +1,6 @@
 import '@vandeurenglenn/lite-elements/theme.js'
 import '@vandeurenglenn/lite-elements/pages.js'
 import '@vandeurenglenn/lite-elements/selector.js'
-import './components/player/chrome.js'
 import icons from './icons.js'
 import '@vandeurenglenn/lite-elements/icon-button.js'
 import '@vandeurenglenn/lite-elements/drawer-item.js'
@@ -39,60 +38,49 @@ class JouleyShell extends LiteElement {
     this._selectedView.select(detail)
   }
 
-  _renderMusicLibrarySubRail() {
+  _renderCleanSubRail() {
     return html`
-      <custom-drawer-item route="music-library-songs">
-        <custom-icon icon="music_note"></custom-icon>
+      <custom-drawer-item route="remove-empty-folders">
+        <custom-icon icon="folder"></custom-icon>
         <flex-it></flex-it>
-        <custom-typography size="medium">songs</custom-typography>
+        <custom-typography size="medium">remove empty folders</custom-typography>
       </custom-drawer-item>
 
-      <custom-drawer-item route="music-library-playlists">
-        <custom-icon icon="featured_playlist"></custom-icon>
+      <custom-drawer-item route="remove-empty-files">
+        <custom-icon icon="draft"></custom-icon>
         <flex-it></flex-it>
-        <custom-typography size="medium">playlists</custom-typography>
-      </custom-drawer-item>
-
-      <custom-drawer-item route="music-library-recents">
-        <custom-icon icon="fiber_new"></custom-icon>
-        <flex-it></flex-it>
-        <custom-typography size="medium">recently added</custom-typography>
-      </custom-drawer-item>
-
-      <custom-drawer-item route="music-library-artists">
-        <custom-icon icon="artist"></custom-icon>
-        <flex-it></flex-it>
-        <custom-typography size="medium">artists</custom-typography>
-      </custom-drawer-item>
-
-      <custom-drawer-item route="music-library-albums">
-        <custom-icon icon="album"></custom-icon>
-        <flex-it></flex-it>
-        <custom-typography size="medium">albums</custom-typography>
+        <custom-typography size="medium">remove empty files</custom-typography>
       </custom-drawer-item>
     `
   }
 
-  _renderVideoLibrarySubRail() {
+  _renderAutomateSubRail() {
     return html`
-      <custom-drawer-item route="video-library-songs">
-        <custom-icon icon="videocam"></custom-icon>
+      <custom-drawer-item route="auto-move">
+        <custom-icon icon="move"></custom-icon>
         <flex-it></flex-it>
-        <custom-typography size="medium">videos</custom-typography>
+        <custom-typography size="medium">move</custom-typography>
       </custom-drawer-item>
 
-      <custom-drawer-item route="video-library-playlists">
-        <custom-icon icon="featured_playlist"></custom-icon>
+      <custom-drawer-item route="auto-remove">
+        <custom-icon icon="delete"></custom-icon>
         <flex-it></flex-it>
-        <custom-typography size="medium">playlists</custom-typography>
-      </custom-drawer-item>
-
-      <custom-drawer-item route="video-library-recents">
-        <custom-icon icon="fiber_new"></custom-icon>
-        <flex-it></flex-it>
-        <custom-typography size="medium">recently added</custom-typography>
+        <custom-typography size="medium">remove</custom-typography>
       </custom-drawer-item>
     `
+  }
+
+  _switchSubRail() {
+    switch (this.selected) {
+      case 'clean':
+        return this._renderCleanSubRail()
+      case 'automate':
+        return this._renderAutomateSubRail()
+      case 'optimize':
+        return this._renderOptimizeSubRail()
+      default:
+        return ''
+    }
   }
 
   render() {
@@ -101,16 +89,16 @@ class JouleyShell extends LiteElement {
       <custom-theme load-symbols="false"></custom-theme>
       <aside>
         <custom-selector class="rail" attr-for-selected="route" @selected=${this._selected.bind(this)}>
-          <custom-drawer-item route="music-library">
-            <custom-icon icon="library_music"></custom-icon>
+          <custom-drawer-item route="clean">
+            <custom-icon icon="mop"></custom-icon>
             <flex-it></flex-it>
-            <custom-typography size="medium">music</custom-typography>
+            <custom-typography size="medium">clean</custom-typography>
           </custom-drawer-item>
 
-          <custom-drawer-item route="video-library">
-            <custom-icon icon="video_library"></custom-icon>
+          <custom-drawer-item route="automate">
+            <custom-icon icon="event_repeat"></custom-icon>
             <flex-it></flex-it>
-            <custom-typography size="medium">video</custom-typography>
+            <custom-typography size="medium">automate</custom-typography>
           </custom-drawer-item>
 
           <flex-it></flex-it>
@@ -129,11 +117,7 @@ class JouleyShell extends LiteElement {
             <custom-typography size="medium">dashboard</custom-typography>
           </custom-drawer-item>-->
 
-          ${this.selected === 'music-library'
-            ? this._renderMusicLibrarySubRail()
-            : this.selected === 'video-library'
-            ? this._renderVideoLibrarySubRail()
-            : ''}
+          ${this._switchSubRail()}
         </custom-selector>
       </aside>
       <main>
@@ -147,10 +131,8 @@ class JouleyShell extends LiteElement {
         </header>
         <custom-pages attr-for-selected="route">
           <settings-view route="settings"></settings-view>
-          <music-library-view route="music-library"></music-library-view>
-          <video-library-view route="video-library"></video-library-view>
+          <clean-view route="clean"></clean-view>
         </custom-pages>
-        <player-chrome></player-chrome>
       </main>
     `
   }

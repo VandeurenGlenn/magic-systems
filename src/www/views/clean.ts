@@ -1,10 +1,9 @@
 import { LiteElement, customElement, html, css, property, query } from '@vandeurenglenn/lite'
-import { LibraryTrack } from '../../types/library.js'
 import { StyleList } from '@vandeurenglenn/lite/element'
 import '@vandeurenglenn/flex-elements/container.js'
 
-@customElement('music-library-view')
-export class MusicLibraryView extends LiteElement {
+@customElement('clean-view')
+export class CleanView extends LiteElement {
   @query('custom-pages') accessor pages
 
   select(selected) {
@@ -33,12 +32,7 @@ export class MusicLibraryView extends LiteElement {
   render() {
     return html`
       <custom-pages attr-for-selected="data-route">
-        <music-library-songs-view data-route="music-library-songs"></music-library-songs-view>
-        <music-library-recents-view data-route="music-library-recents"></music-library-recents-view>
-        <music-library-playlists-view data-route="music-library-playlists"></music-library-playlists-view>
-
-        <music-library-albums-view data-route="music-library-albums"></music-library-albums-view>
-        <music-library-artists-view data-route="music-library-artists"></music-library-artists-view>
+        <remove-empty-folders-view data-route="remove-empty-folders"></remove-empty-folders-view>
       </custom-pages>
     `
   }

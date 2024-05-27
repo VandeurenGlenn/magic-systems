@@ -5,7 +5,7 @@ import materialSymbols from 'rollup-plugin-material-symbols'
 import { cssModules } from 'rollup-plugin-css-modules'
 import { htmlModules } from 'rollup-plugin-html-modules'
 import { cp, opendir, unlink, readdir } from 'fs/promises'
-import { join } from 'path'
+import { format, join } from 'path'
 import { globby } from 'globby'
 import replace from '@rollup/plugin-replace'
 
@@ -85,7 +85,7 @@ export default [
   },
   {
     input: ['src/app.ts'],
-    external: ['electron', './chokidar.js'],
+    external: ['electron'],
     output: {
       dir: 'app',
       format: 'es'
@@ -100,19 +100,6 @@ export default [
     }
   },
   {
-    input: './node_modules/chokidar/index.js',
-    output: {
-      file: 'app/chokidar.js',
-      format: 'es'
-    },
-    plugins: [
-      commonjs(),
-      replace({
-        "import require$$1 from 'fsevents';": ''
-      })
-    ]
-  },
-  {
     input: ['src/preload.ts'],
     external: ['electron'],
     output: {
@@ -120,5 +107,22 @@ export default [
       format: 'cjs'
     },
     plugins: [clean('app'), typescript(), resolve()]
+  },
+  {
+    input: ['src/cli.ts'],
+    output: {
+      banner: '#!/usr/bin/env node',
+      format: 'es',
+      dir: 'app'
+    },
+    plugins: [typescript()]
+  },
+  {
+    input: ['src/tasks/tasks.ts', 'src/tasks/get-empty-dirs.ts', 'src/tasks/remove-empty-dirs.ts'],
+    output: {
+      format: 'es',
+      dir: 'app/tasks'
+    },
+    plugins: [typescript()]
   }
 ]

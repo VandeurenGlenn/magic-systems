@@ -1,2 +1,3 @@
-# jouley
- enjoy music your way
+# magic-systems
+
+> manage system with ease
