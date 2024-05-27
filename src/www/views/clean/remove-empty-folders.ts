@@ -77,7 +77,7 @@ export class RemoveEmptyFoldersView extends LiteElement {
 
   async _scan() {
     this.busy = true
-    const emptyDirs = await api.execTask({ task: 'get-empty-dirs', input: this.directories })
+    const emptyDirs = await api.execTask({ task: 'get-empty-dirs', input: JSON.stringify(this.directories) })
     this.busy = false
 
     this.emptyDirs = emptyDirs
@@ -86,7 +86,7 @@ export class RemoveEmptyFoldersView extends LiteElement {
 
   async _remove() {
     this.busy = true
-    const emptyDirs = await api.execTask({ task: 'remove-empty-dirs', input: this.emptyDirs })
+    const emptyDirs = await api.execTask({ task: 'remove-empty-dirs', input: JSON.stringify(this.emptyDirs) })
     this.busy = false
 
     for (const dir of emptyDirs) {
