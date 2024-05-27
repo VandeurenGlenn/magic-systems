@@ -3,11 +3,11 @@ import { join } from 'path'
 import { posixify } from '../utils/posixify.js'
 import { arrayify } from '../utils/arrayify.js'
 
-let input = process.env.input ?? process.cwd()
+let input = process.env.input ? JSON.parse(process.env.input) : [process.cwd()]
 
 const output = []
 
-const exclude = (file) =>
+const exclude = file =>
   file.endsWith('Application Data') ||
   file.endsWith("Programma's") ||
   file.endsWith('Programs') ||
@@ -44,17 +44,17 @@ const exclude = (file) =>
   file.includes('Windows Defender') ||
   file.includes('ProgramData/Microsoft') ||
   file.includes('cygwin64/dev/fd')
-const excludes = (file) => {
+const excludes = file => {
   file = posixify(file)
   return exclude(file)
 }
-const goTroughDirs = async (path) => {
+const goTroughDirs = async path => {
   const promises = []
   let directoryContent = await readdir(path)
   if (directoryContent.length === 0) output.push(path)
   else {
-    directoryContent = directoryContent.filter((file) => !excludes(posixify(join(path, file))))
-    const task = async (dir) => {
+    directoryContent = directoryContent.filter(file => !excludes(posixify(join(path, file))))
+    const task = async dir => {
       if ((await stat(dir)).isDirectory()) {
         await goTroughDirs(dir)
       }
@@ -67,7 +67,6 @@ const goTroughDirs = async (path) => {
     await Promise.allSettled(promises)
   }
 }
-console.log(input)
 
 for (const _input of arrayify(input)) {
   await goTroughDirs(posixify(_input))
