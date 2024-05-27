@@ -70,6 +70,11 @@ export class RemoveEmptyFoldersView extends LiteElement {
     // return file;
   }
 
+  _clear() {
+    this.directories = []
+    this.emptyDirs = []
+  }
+
   async _scan() {
     this.busy = true
     const emptyDirs = await api.execTask({ task: 'get-empty-dirs', input: this.directories })
@@ -95,7 +100,7 @@ export class RemoveEmptyFoldersView extends LiteElement {
 
   render() {
     return this.busy
-      ? html`<h3>${this.emptyDirs ? html`Removing` : html`Scanning`}</h3>
+      ? html`<h3>${this.emptyDirs?.length > 0 ? html`Removing` : html`Scanning`}</h3>
           <busy-animation></busy-animation>`
       : html`
           <flex-display
@@ -122,6 +127,13 @@ export class RemoveEmptyFoldersView extends LiteElement {
             class="actions">
             ${this.emptyDirs?.length > 0
               ? html`
+                  <custom-button
+                    @click=${this._clear.bind(this)}
+                    label="clear">
+                    <custom-icon
+                      icon="cancel"
+                      slot="icon"></custom-icon>
+                  </custom-button>
                   <flex-it></flex-it>
                   <custom-button
                     @click=${this._remove.bind(this)}
